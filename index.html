@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Pomodoro Clock by Hayhitee</title>
+        
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <style>
+            body{
+                background:rebeccapurple;
+                color:snow;
+            }
+            .center-block{
+                padding:24px 0px 4px 0px;
+            }
+            .watch{
+                border: 3px solid wheat;
+                height: 250px;
+                width:  250px;
+                background-clip:content-box;
+                padding:5px;
+                border-radius:50%;
+                background-size:100% 200%; 
+                background-image: linear-gradient(180deg,rebeccapurple 50%, yellow 50%);
+                -webkit-transition:background-position 5s;
+                -moz-transition:background-position 5s;
+                transition:background-position 5s;
+            }
+          /*  .watch:hover{
+                background-position:0 100%;
+            } */
+            .plus, .min:hover{
+                    cursor: pointer;
+            }
+        </style>
+        </head>
+    <body>
+        <div class="container">
+            <div class="row center-block text-center">
+                <h1>Pomodoro Clock</h1>
+                <div class="col-sm-3 col-md-3 size">
+                    <p>Work Length</p>
+                    <p class="break"><span class="plus" id="one">+ </span><p id="a">25</p><span class="min" id="min-one"> -</span></p>
+                    
+                </div>
+                <div class="col-sm-6 col-md-6 size">
+                    <div class="center-block watch">
+                        <div class="ses" style="">
+                                <h2>Session</h2>     
+                                <h3>25</h3>
+                        </div>
+                        <div class="brk">
+                                <h2>Break</h2>     
+                                <h3>5</h3>
+                        </div>
+                           
+                                           
+                    </div>
+
+                </div>
+                <div class="col-sm-3 col-md-3 size">
+                    <p>Break Length</p>
+                    <p class="break"><span class="plus" id="two">+</span><p id="b">5</p><span class="min" id="min-two"> -</span></p>
+                </div>
+
+            </div>
+            
+        </div>
+    
+
+
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+        <script src="js/jquery-1.11.3.min.js"></script> 
+        <!-- Include all compiled plugins (below), or include individual files as needed --> 
+        <script src="js/bootstrap.js"></script>
+        <script>
+            $(document).ready(function(){
+                //variables to set time
+                var brkdp, sesdp, brk, ses;
+                var isSesOn = false;
+                var isBrkOn = false;
+
+                //classes for clicking plus; using id to target one
+                $(".plus").on("click",function(e){
+                    select = e.target.id; 
+                   if(select=="one"){
+                    $("#a").text(parseInt($("#a").text())+1)
+                    $(".ses h3").text($("#a").text());
+
+                   }
+                   else if(select=="two"){
+                    $("#b").text(parseInt($("#b").text())+1)
+                    $(".brk h3").text($("#b").text());
+
+                   }
+                   
+
+                });
+
+                //classes for clicking Minus; using id to target one
+                $(".min").on("click",function(e){
+                    select = e.target.id; 
+                   if(select=="min-one" && $("#a").text() > 0 ){
+                    $("#a").text(parseInt($("#a").text())-1)
+                    $(".ses h3").text($("#a").text());
+
+                   }
+                   else if(select=="min-two" && $("#b").text() > 0){
+                    $("#b").text(parseInt($("#b").text())-1)
+                    $(".brk h3").text($("#b").text());
+
+                   }
+                });
+
+                //class function on click triggers animation and timer
+                $(".watch").on("click",function(){
+                    if(isSesOn){
+                    isSesOn = false;
+                    clearTimeout(ses);
+                    }
+                    else if(isBrkOn){
+                        isBrkOn = false;
+                        clearTimeout(brk);
+                    }
+                    else {
+                    isSesOn = true;
+                    session();
+                    
+                    }
+                });
+
+                function session(){
+                    
+                    x = parseInt($("#a").text());
+                    $(".ses").css("display","block");
+                    $(".brk").css("display","none");
+                    $(".ses h3").text($("#a").text());
+                    sesdp = parseInt($(".ses h3").text())
+                    sesdown();
+                    
+                    //alert("hi");
+                    $(".watch").css("-webkit-transition","background-position " + x +"s");
+                    $(".watch").css("-moz-transition","background-position " + x + "s");
+                    $(".watch").css("transition","background-position " + x + "s");
+                    $(".watch").css("background-position","0% 100%");
+                    x = parseInt(x) * 1000
+                    function sesdown(){
+                        if(sesdp<0){
+                            isSesOn = false;
+                            isBrkOn = true;
+                            brek();
+                            return null;
+                        }
+                        //alert("time");
+                        $(".ses h3").text(sesdp);
+                        sesdp -=1;
+                        ses = setTimeout(sesdown,1000);
+                    
+                    }
+                    //setTimeout(brek, x);
+                    
+                    
+                    
+                }
+
+                function brek(){
+                  
+                    y = parseInt($("#b").text());
+                    
+                    $(".brk").css("display","block");
+                    $(".ses").css("display","none");
+                   // alert("hello");
+                   $(".brk h3").text($("#b").text());
+                   brkdp = parseInt($(".brk h3").text())
+                    brkdown();
+                    
+                    $(".watch").css("-webkit-transition","background-position " + y +"s");
+                    $(".watch").css("-moz-transition","background-position " + y + "s");
+                    $(".watch").css("transition","background-position " + y + "s");
+                    $(".watch").css("background-position","100% 0%");
+                    y = parseInt(y) * 1000
+                    function brkdown(){
+                        if(brkdp<0){
+                            isSesOn = true;
+                            isBrkOn = false;
+                            session();
+                            return null;
+                        }
+                        //alert("time");
+                        
+                        $(".brk h3").text(brkdp);
+                        brkdp -=1;
+                        brk = setTimeout(brkdown,1000);
+                    }
+                    //setTimeout(session,y);
+                }
+                
+                
+
+
+
+
+            });
+
+
+            </script>
+    </body>
+</html>
